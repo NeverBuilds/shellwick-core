@@ -1,0 +1,29 @@
+[package]
+name = "sshcore"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "UI-independent SSH session core: connect, pty shell, reconnect, credentials"
+
+[dependencies]
+russh = "0.65"
+russh-sftp = "3"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "net", "fs", "io-util"] }
+thiserror = "2"
+serde = { version = "1", features = ["derive"] }
+tracing = "0.1"
+keyring = { version = "3", features = ["apple-native", "windows-native", "async-secret-service", "tokio", "crypto-rust"] }
+bytes = "1"
+# OS random source for key generation (already in the lockfile, same version and feature).
+getrandom = { version = "0.4", features = ["sys_rng"] }
+
+[target.'cfg(windows)'.dependencies]
+# PuTTY keeps saved sessions in the registry (already in the lockfile via tauri-build).
+winreg = "0.56"
+# Pageant transport for the SSH agent (already in the lockfile via russh).
+pageant = "0.2"
+
+[dev-dependencies]
+serde_json = "1"
+# Test-only: russh's agent server takes a Stream of connections (already in the lockfile via russh).
+futures = "0.3"
